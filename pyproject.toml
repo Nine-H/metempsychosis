@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["lib"]
+include = ["metempsychosis"]
+
+[project]
+authors = [{name = "Nine"}]
+dependencies = []
+description = "offline synthesizer, pure python dsp"
+license = {file = "LICENSE"}
+name = "metempsychosis"
+readme = "README.md"
+requires-python = ">= 3.11"
+version = "0.1"
