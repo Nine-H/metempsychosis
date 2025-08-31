@@ -96,8 +96,14 @@ def fx_downsample(
     :param sample_rate: the new sample rate for the sample
     """
     sample_rate = min(sample_rate, SAMPLE_RATE)
-    for s in sample:
-        yield s
+    r = int(SAMPLE_RATE / sample_rate)
+    b = 0.0
+    for i, s in enumerate(sample):
+        if i == 0:
+            b = s
+        elif i % r == 0:
+            b = s
+        yield b
 
 
 def fx_highpass(sample, c: float, r: float, q: float) -> Iterable[float]:
@@ -134,7 +140,7 @@ def fx_wavefold(sample, lim: float = 1.0) -> Iterable[float]:
         if s > lim:
             yield lim - (s - lim)
         elif s < -lim: 
-             yield -lim + (s - lim)
+            yield -lim + (s - lim)
         else:
             yield s
 
@@ -149,7 +155,7 @@ def fx_wrap(sample, lim: float = 1.0) -> Iterable[float]:
         if s > lim:
             yield -lim + (s - lim)
         elif s < -lim: 
-             yield lim - (s - lim)
+            yield lim - (s - lim)
         else:
             yield s
 
