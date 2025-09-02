@@ -19,20 +19,6 @@ def _range(d: int = BIT_DEPTH) -> tuple[float, float]:
     return pow(-2, d - 1), pow(2, d - 1) - 1
 
 
-def pcm(s: float) -> bytes:
-    """
-    converts samples to correct format for pcm wave
-    :param s: a floating point sample
-    """
-    _, m = _range()
-    s = int(s * m)
-    return s.to_bytes(
-        length=BIT_DEPTH//8,
-        byteorder="little",
-        signed=True
-    )
-
-
 def read_wav(path: str) -> Iterable[float]:
     """
     reads a sample file
@@ -58,12 +44,16 @@ def write_wav(path: str, sample: Iterable[float]) -> None:
     :param path: path to file
     :param sample: sample data to write
     """
-    data = bytes()
-    for s in sample:
-        data += pcm(s)
-
+    _, m = _range()
     with open(path, "wb") as file:
         file.setnchannels(1)
         file.setsampwidth(BIT_DEPTH // 8)
         file.setframerate(SAMPLE_RATE)
-        file.writeframes(data)
+        for s in sample:
+            file.writeframes(
+                int(s * m).to_bytes(
+                    length=BIT_DEPTH//8,
+                    byteorder="little",
+                    signed=True
+                )
+            )
