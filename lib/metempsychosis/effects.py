@@ -8,7 +8,7 @@ GPLv3+
 from collections.abc import Iterable
 from math import pi, sqrt, tan
 # loacl imports
-from .constants import SAMPLE_RATE
+from .constants import BIT_DEPTH, SAMPLE_RATE
 
 
 def fx_allpass(sample, c: float, r: float, q: float) -> Iterable[float]:
@@ -62,6 +62,21 @@ def fx_bias(sample, bias: float) -> Iterable[float]:
         yield s + bias
 
 
+def fx_bitcrush(
+    sample: Iterable[float],
+    bit_depth: int = BIT_DEPTH,
+) -> Iterable[float]:
+    """
+    distorts sample by reducing bit depth
+    :param bit_depth: the new bit depth for the sample
+    """
+    d = pow(2, min(bit_depth, BIT_DEPTH)) - 1
+    for s in sample:
+        n = (s + 1.0) * 0.5
+        q = round(n * d) / d
+        yield (q - 0.5) * 2.0
+ 
+
 def fx_clip(sample, lim: float = 1.0) -> Iterable[float]:
     """
     clips a sample to fit amplitude by limit
@@ -70,6 +85,25 @@ def fx_clip(sample, lim: float = 1.0) -> Iterable[float]:
     """
     for s in sample:
         yield min(max(s, -lim), lim)
+
+
+def fx_downsample(
+    sample: Iterable[float],
+    sample_rate: int = SAMPLE_RATE,
+) -> Iterable[float]:
+    """
+    distorts sample by reducing sample rate
+    :param sample_rate: the new sample rate for the sample
+    """
+    sample_rate = min(sample_rate, SAMPLE_RATE)
+    r = int(SAMPLE_RATE / sample_rate)
+    b = 0.0
+    for i, s in enumerate(sample):
+        if i == 0:
+            b = s
+        elif i % r == 0:
+            b = s
+        yield b
 
 
 def fx_highpass(sample, c: float, r: float, q: float) -> Iterable[float]:
@@ -106,7 +140,7 @@ def fx_wavefold(sample, lim: float = 1.0) -> Iterable[float]:
         if s > lim:
             yield lim - (s - lim)
         elif s < -lim: 
-             yield -lim + (s - lim)
+            yield -lim + (s - lim)
         else:
             yield s
 
@@ -121,7 +155,7 @@ def fx_wrap(sample, lim: float = 1.0) -> Iterable[float]:
         if s > lim:
             yield -lim + (s - lim)
         elif s < -lim: 
-             yield lim - (s - lim)
+            yield lim - (s - lim)
         else:
             yield s
 

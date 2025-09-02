@@ -27,9 +27,10 @@ definitely bug free I swear.
     - pwm
     - basic waves
 - effects
-    - clipping
+    - clipping, wavefolding, wrapping
     - xfade
     - low, high, allpass filters
+    - bitcrush/downsample
 - macros
     - wavetable_xfade: create a wavetable that transitions between two waves
     - wavetable_pwm: create a wavetable that modulates pwm
@@ -67,6 +68,7 @@ env var       | default | description
 # example scripts
 
 - `basicwaves.py`: hello metempsychosis, outputs single cycle basic waves at cd quality
+- `degrade.py`: bitcrushing and downsampling
 - `filters.py`: test script for filters
 - `fm.py`: TBD, render general midi fm presets to samples
 - `lofi.py`: renders wavetables with a configurable number of cycles and samples, defaults both to 16
