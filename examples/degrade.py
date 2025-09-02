@@ -42,9 +42,9 @@ if __name__ == "__main__":
     # downsample pcm samples
     write_wav(
         path + "/pcmdownsamplespeech.wav",
-        fx_downsample(read_wav("data/speech.wav"), SAMPLE_RATE // 4)
+        fx_downsample(read_wav("data/speech.wav"), SAMPLE_RATE // 16)
     )
     write_wav(
         path + "/pcmdownsampleping.wav",
-        fx_downsample(read_wav("data/ping.wav"), SAMPLE_RATE // 2)
+        fx_downsample(read_wav("data/ping.wav"), SAMPLE_RATE // 24)
     )
