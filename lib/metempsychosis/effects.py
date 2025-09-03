@@ -130,6 +130,38 @@ def fx_lowpass(sample, c: float, r: float, q: float) -> Iterable[float]:
         yield (s + f) * 0.5
 
 
+def fx_reverse(sample: Iterable[float]) -> Iterable[float]:
+    """
+    play sample in reverse
+    :param sample: sample to process
+    """
+    for s in list(sample)[::-1]:
+        yield s
+
+
+def fx_speed(sample: Iterable[float], t: float) -> Iterable[float]:
+    """
+    change the speed of a sample, not preserving pitch
+    :param sample: sample to process
+    :param t: speed
+    """
+    n = SAMPLE_RATE * t
+    for s in sample:
+        yield s
+
+
+def fx_timestretch(sample: Iterable[float], t: float) -> Iterable[float]:
+    """
+    change the speed of a sample, preserving pitch
+    :param sample: sample to process
+    :param t: speed
+    """
+    b = list(sample)
+    n = int(len(b) * t)
+    for s in sample:
+        yield s
+
+
 def fx_wavefold(sample, lim: float = 1.0) -> Iterable[float]:
     """
     clips a sample to fit amplitude by folding it back on itself
